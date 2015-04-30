@@ -6,6 +6,7 @@
   Version: 0.9
   Author: Christopher Laconsay
   Author URI: http://chrislaconsay.com
+  License: GPL-2.0+
  */
 // If this file is called directly, abort.
 if (!defined('ABSPATH'))

@@ -3,8 +3,8 @@
  * iPay88 gateway add-on for Events Manager Pro
  * @package   Events_Manager_iPay88
  * @author Christopher Laconsay <claconsay[at]gmail[dot]com>
- * @license GPL-2.0+ Christopher Laconsay
- * @copyright 2015 
+ * @license GPL-2.0+
+ * @copyright 2015 claconsay 
  */
 class EM_Gateway_iPay88 extends EM_Gateway {
 

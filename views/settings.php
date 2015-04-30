@@ -3,7 +3,7 @@
 * @package   Events_Manager_iPay88
 * @author Christopher Laconsay <claconsay[at]gmail[dot]com>
 * @license GPL-2.0+ Christopher Laconsay
-* @copyright 2015 
+* @copyright 2015 claconsay 
 */
 
 <?php 
