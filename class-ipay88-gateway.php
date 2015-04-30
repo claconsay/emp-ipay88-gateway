@@ -188,7 +188,7 @@ class EM_Gateway_iPay88 extends EM_Gateway {
         global $wp_rewrite, $EM_Notices;
         $notify_url = $this->get_payment_return_url();
         $ipay88_password = get_option('em_' . $this->gateway . "_password");
-        /*
+        /* TODO: create a settings page and assign data below
          * $data['MerchantCode']
             $data['MerchantKey']
             $data['PaymentId']
