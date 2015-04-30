@@ -5,6 +5,13 @@
 * @license GPL-2.0+ Christopher Laconsay
 * @copyright 2015 
 */
+
+<?php 
+/*
+ * TODO
+ * - modify settings page according to iPay88
+ */
+?>
     <table class="form-table">
         <tbody>
             <tr valign="top">
