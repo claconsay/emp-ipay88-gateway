@@ -1,0 +1,11 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}iPay88 gateway add-on for Events Manager Pro
+${licensePrefix}@package   Events_Manager_iPay88
+${licensePrefix}@author Christopher Laconsay <claconsay[at]gmail[dot]com>
+${licensePrefix}@license GPL-2.0+ Christopher Laconsay
+${licensePrefix}@copyright 2015 
+<#if licenseLast??>
+${licenseLast}
+</#if>
