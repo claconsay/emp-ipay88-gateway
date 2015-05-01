@@ -2,8 +2,7 @@
 A wordpress plugin that integrates iPay88 Gateway into Events Manager. This plugin requires Events Manager and Events Manager Pro installed.
 
 ###What is Events Manager?
-Events Manager is a plugin for WordPress which enables you to publish event, locations and calendars as well as accepting bookings for these events.
-
+Events Manager is a plugin for WordPress which enables you to publish event, locations and calendars as well as accepting bookings for these events. Click <a href="https://wordpress.org/plugins/events-manager/">here</a> to download the official plugin release.
 
 ###What is Events Manager Pro?
 Events Manager Pro is a premium add-on for Events Manager, which adds a layer of powerful features to what is already available. This includes:
