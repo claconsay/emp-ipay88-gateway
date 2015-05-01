@@ -66,17 +66,17 @@
             <tr valign="top">
                 <th scope="row"><?php _e('Payment ID', 'em-pro') ?></th>
                 <td><input type="text" name="ipay88_payid" value="<?php esc_attr_e($this->get_option("payid")); ?>" /><br />
-                    <em><?php _e('ID of payment method to be use. Default: 2', 'em-pro'); ?></em>
+                    <em><?php _e('ID of payment method to be use. Recommended value: 2', 'em-pro'); ?></em>
                 </td>
             </tr>
             <tr valign="top">
 		<th scope="row"><?php _e('Currency', 'em-pro') ?></th>
 		<td><?php echo esc_html(get_option('dbem_bookings_currency','MYR')); ?><br />
-                    <em><?php echo sprintf(__('Set your currency in the <a href="%s">settings</a> page. Default: MYR','dbem'),EM_ADMIN_URL.'&amp;page=events-manager-options'); ?></em></td>
+                    <em><?php echo sprintf(__('Set your currency in the <a href="%s">settings</a> page.','dbem'),EM_ADMIN_URL.'&amp;page=events-manager-options'); ?></em></td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Response URL', 'em-pro') ?></th>
-                <td><input type="text" name="" value="<?php echo $this->get_payment_return_url(); ?>" disabled/><br />
+                <td><input type="text" name="" value="<?php echo $this->get_payment_return_url(); ?>" disabled style='width: 40em;'/><br />
                     <em><?php _e('From the payment gateway page, transaction results will be sent to this URL and all the booking processes will be handled in this page.', 'em-pro');?></em>
                 </td>
             </tr>
