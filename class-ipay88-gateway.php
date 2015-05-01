@@ -1,4 +1,5 @@
 <?php
+
 /*
  * iPay88 gateway add-on for Events Manager Pro
  * @package   Events_Manager_iPay88
@@ -6,6 +7,7 @@
  * @license GPL-2.0+
  * @copyright 2015 claconsay 
  */
+
 class EM_Gateway_iPay88 extends EM_Gateway {
 
     var $gateway = 'ipay88';
@@ -23,7 +25,7 @@ class EM_Gateway_iPay88 extends EM_Gateway {
         $this->status_txt = __('Awaiting iPay88 Payment', 'em-pro');
         if ($this->is_active()) {
             //Booking Interception
-            if (absint(get_option('em_' . $this->gateway . '_booking_timeout')) > 0) {
+            if (absint($this->ipay88_option('booking_timeout')) > 0) {
                 //Modify spaces calculations only if bookings are set to time out, in case pending spaces are set to be reserved.
                 add_filter('em_bookings_get_pending_spaces', array(&$this, 'em_bookings_get_pending_spaces'), 1, 2);
             }
@@ -152,7 +154,7 @@ class EM_Gateway_iPay88 extends EM_Gateway {
      * Outputs extra custom content e.g. the iPay88 logo by default. 
      */
     function booking_form() {
-        echo get_option('em_' . $this->gateway . '_form');
+        echo $this->ipay88_option('form');
     }
 
     /**
@@ -185,31 +187,25 @@ class EM_Gateway_iPay88 extends EM_Gateway {
      * @param EM_Booking $EM_Booking
      */
     function get_ipay88_vars($EM_Booking) {
-        global $wp_rewrite, $EM_Notices;
-        $notify_url = $this->get_payment_return_url();
-        $ipay88_password = get_option('em_' . $this->gateway . "_password");
-        /* TODO: create a settings page and assign data below
-         * $data['MerchantCode']
-            $data['MerchantKey']
-            $data['PaymentId']
-            $data['RefNo']
-            $data['Amount']
-            $data['Currency']
-            $data['ProdDesc']
-            $data['UserName']
-            $data['UserEmail']
-            $data['UserContact']
-            $data['Remark']
-            $data['ResponseURL']
-            $data['Lang'] = "UTF-8";
-            $gensign = $data['MerchantKey'] . $data['MerchantCode'] . $data['RefNo'] . str_replace(".","",str_replace(",","",$data['Amount'])) . $data['Currency'] ;
-            $postsign = compute_signature($gensign);
-            $data['Signature'] = $postsign;
-         */
+        $responseurl = $this->get_payment_return_url();
         
-        $ipay88_vars = array(
-            
-        );
+        $ipay88_vars['MerchantCode'] = $this->ipay88_option('mercode');
+        $ipay88_vars['MerchantKey'] = $this->ipay88_option('mercode');
+        $ipay88_vars['PaymentId'] = $this->ipay88_option('mercode');
+        $ipay88_vars['RefNo'] = $this->ipay88_option('mercode');
+        $ipay88_vars['Amount'] = number_format($this->get_booking_total_price($EM_Booking), 2, '.', '');
+        $ipay88_vars['Currency'] = get_option('dbem_bookings_currency', 'USD');
+        $ipay88_vars['ProdDesc'] = '';
+        $ipay88_vars['UserName'] = $EM_Booking->get_person()->first_name." ".$EM_Booking->get_person()->last_name;
+        $ipay88_vars['UserEmail'] = $EM_Booking->get_person()->user_email;
+        $ipay88_vars['UserContact'] = '';
+        $ipay88_vars['Remark'] = '';
+        $ipay88_vars['ResponseURL'] = $responseurl;
+        $ipay88_vars['Lang'] = $this->ipay88_option('mercode');
+        $gensign = $ipay88_vars['MerchantKey'] . $ipay88_vars['MerchantCode'] . $ipay88_vars['RefNo'] . str_replace(".", "", $ipay88_vars['Amount']) . $ipay88_vars['Currency'];
+        $postsign = compute_signature($gensign);
+        $ipay88_vars['Signature'] = $postsign;
+        
         return apply_filters('em_gateway_ipay88_get_ipay88_vars', $ipay88_vars, $EM_Booking, $this);
     }
 
@@ -218,17 +214,7 @@ class EM_Gateway_iPay88 extends EM_Gateway {
      * @returns string 
      */
     function get_ipay88_url() {
-        if (get_option('em_' . $this->gateway . "_testmode") == "True") {
-            //$ipay88_vars['TestFlag'] = "True";		
-            return get_option('em_' . $this->gateway . '_redirectlink_test');
-        }
-        return get_option('em_' . $this->gateway . '_redirectlink');
-    }
-
-    function say_thanks() {
-        if ($_REQUEST['thanks'] == 1) {
-            echo "<div class='em-booking-message em-booking-message-success'>" . get_option('em_' . $this->gateway . '_booking_feedback_thanks') . '</div>';
-        }
+        return "https://www.mobile88.com/ePayment/entry.asp";
     }
 
     /**
@@ -260,7 +246,9 @@ class EM_Gateway_iPay88 extends EM_Gateway {
             $reasCodeDesc = $_POST['ReasonCodeDesc'];
             $cusID = $_POST['customerid'];
 
-
+            /*
+             * TODO: Handle responses from the gateway
+             */
             switch ($respCode) {
                 case 1: //case: payment is approved
                     $merId = $_POST['MerID'];
@@ -278,12 +266,12 @@ class EM_Gateway_iPay88 extends EM_Gateway {
                      * check if signature is matched
                      * Make sure no alteration happened during the whole cycle
                      */
-                    $hashString = get_option('em_' . $this->gateway . "_password") . $merId . $acqId . $orderId . $respCode . $reasCode;
+                    $hashString = $this->ipay88_option("password") . $merId . $acqId . $orderId . $respCode . $reasCode;
                     $hashSig = base64_encode(sha1($hashString, true)); // default sha1
                     /**
                      * Still have to check for $hashSig							
                      */
-                    if (get_option('em_' . $this->gateway . "_sigmethod") == "SHA1")
+                    if ($this->ipay88_option("sigmethod") == "SHA1")
                         $hashSig = base64_encode(sha1($hashString, true));
                     else
                         $hashSig = base64_encode(md5($hashString, true));
@@ -315,7 +303,7 @@ class EM_Gateway_iPay88 extends EM_Gateway {
                             }
                             $this->record_transaction($EM_Booking, $purchase_amnt, get_option('dbem_bookings_currency', 'USD'), current_time('mysql'), $refNum, "Confirmed", $reasCodeDesc);
 
-                            if (!get_option('em_' . $this->gateway . '_manual_approval', false) || !get_option('dbem_bookings_approval')) {
+                            if (!$this->ipay88_option('manual_approval', false) || !get_option('dbem_bookings_approval')) {
                                 $EM_Booking->approve(true, true); //approve and ignore spaces
                             } else {
                                 //TODO do something if payment not enough
@@ -324,8 +312,8 @@ class EM_Gateway_iPay88 extends EM_Gateway {
                             do_action('em_payment_processed', $EM_Booking, $this);
 
                             //redirect user to a thank you page, if that you is set
-                            if (get_option('em_' . $this->gateway . "_thankyouurl")) {
-                                header("Location: " . get_option('em_' . $this->gateway . "_thankyouurl"));
+                            if ($this->ipay88_option("thankyouurl")) {
+                                header("Location: " . $this->ipay88_option("thankyouurl"));
                                 /* Make sure that code below does not get executed when we redirect. */
                                 exit;
                             }
@@ -343,11 +331,10 @@ class EM_Gateway_iPay88 extends EM_Gateway {
                     $EM_Booking = new EM_Booking($bookingId);
 
                     //$this->record_transaction($EM_Booking, "0.00", get_option('dbem_bookings_currency', 'USD'), current_time('mysql'), $refNum, "Awaiting Payment", $reasCodeDesc);	
-                    echo get_option("Before do action");
-                    //do_action('em_payment_denied', $EM_Booking, $this);
-                    echo get_option("After do action");
-                    if (get_option('em_' . $this->gateway . "_paycancelled")) {
-                        header("Location: " . get_option('em_' . $this->gateway . "_paycancelled"));
+                   //do_action('em_payment_denied', $EM_Booking, $this);
+       
+                    if ($this->ipay88_option("paycancelled")) {
+                        header("Location: " . $this->ipay88_option("paycancelled"));
                         /* Make sure that code below does not get executed when we redirect. */
                         exit;
                     }
@@ -358,20 +345,20 @@ class EM_Gateway_iPay88 extends EM_Gateway {
                     $bookingId = $ids[0];
                     $this->record_transaction($EM_Booking, "0.00", get_option('dbem_bookings_currency', 'USD'), current_time('mysql'), $refNum, "Awaiting Payment", $reasCodeDesc);
                     do_action('em_payment_denied', $EM_Booking, $this);
-                    if (get_option('em_' . $this->gateway . "_paycancelled")) {
-                        header("Location: " . get_option('em_' . $this->gateway . "_paycancelled"));
+                    if ($this->ipay88_option("paycancelled")) {
+                        header("Location: " . $this->ipay88_option("paycancelled"));
                         /* Make sure that code below does not get executed when we redirect. */
                         exit;
                     }
                     break;
                 default:
-                    header("Location: " . get_option('em_' . $this->gateway . "_paycancelled"));
+                    header("Location: " . $this->ipay88_option("paycancelled"));
                     exit;
                 // case: various error cases
             }
         } else {
-            if (get_option('em_' . $this->gateway . "_paycancelled")) {
-                header("Location: " . get_option('em_' . $this->gateway . "_paycancelled"));
+            if ($this->ipay88_option("paycancelled")) {
+                header("Location: " . $this->ipay88_option("paycancelled"));
                 /* Make sure that code below does not get executed when we redirect. */
                 exit;
             } else {
@@ -390,7 +377,6 @@ class EM_Gateway_iPay88 extends EM_Gateway {
      * Outputs custom iPay88 setting fields in the settings page 
      */
     function mysettings() {
-        global $EM_options;
         include ( plugin_dir_path(__FILE__) . 'views/settings.php' );
     }
 
@@ -401,36 +387,56 @@ class EM_Gateway_iPay88 extends EM_Gateway {
     function update() {
         parent::update();
         $gateway_options = array(
-            $this->gateway . "_booking_feedback" => wp_kses_data($_REQUEST[$this->gateway . '_booking_feedback']),
-            $this->gateway . "_booking_feedback_thanks" => wp_kses_data($_REQUEST[$this->gateway . '_booking_feedback_thanks']),
-            $this->gateway . "_booking_feedback_free" => wp_kses_data($_REQUEST[$this->gateway . '_booking_feedback_free']),
-            $this->gateway . "_version" => wp_kses_data($_REQUEST[$this->gateway . '_version']),
-            $this->gateway . "_merchantid" => wp_kses_data($_REQUEST[$this->gateway . '_merchantid']),
-            $this->gateway . "_acquirerid" => wp_kses_data($_REQUEST[$this->gateway . '_acquirerid']),
-            $this->gateway . "_password" => wp_kses_data($_REQUEST[$this->gateway . '_password']),
-            $this->gateway . "_thankyouurl" => wp_kses_data($_REQUEST[$this->gateway . '_thankyouurl']),
-            $this->gateway . "_paycancelled" => wp_kses_data($_REQUEST[$this->gateway . '_paycancelled']),
-            $this->gateway . "_redirectlink" => wp_kses_data($_REQUEST[$this->gateway . '_redirectlink']),
-            $this->gateway . "_redirectlink_test" => wp_kses_data($_REQUEST[$this->gateway . '_redirectlink_test']),
-            $this->gateway . "_reponseurl" => wp_kses_data($_REQUEST[$this->gateway . '_reponseurl']),
-            $this->gateway . "_sigmethod" => wp_kses_data($_REQUEST[$this->gateway . '_sigmethod']),
-            $this->gateway . "_booking_timeout" => $_REQUEST[$this->gateway . '_booking_timeout'],
-            $this->gateway . "_testmode" => wp_kses_data($_REQUEST[$this->gateway . '_testmode'])
+            "status" => wp_kses_data($_REQUEST[$this->gateway . '_status']),
+            "booking_feedback" => wp_kses_data($_REQUEST[$this->gateway . '_booking_feedback']),
+            "booking_feedback_free" => wp_kses_data($_REQUEST[$this->gateway . '_booking_feedback_free']),
+            "mercode" => wp_kses_data($_REQUEST[$this->gateway . '_mercode']),
+            "merkey" => wp_kses_data($_REQUEST[$this->gateway . '_merkey']),
+            "payid" => wp_kses_data($_REQUEST[$this->gateway . '_payid']),
+            "lang" => wp_kses_data($_REQUEST[$this->gateway . '_lang']),
+            "thankyouurl" => wp_kses_data($_REQUEST[$this->gateway . '_thankyouurl']),
+            "paycancelled" => wp_kses_data($_REQUEST[$this->gateway . '_paycancelled']),
+            "booking_timeout" => $_REQUEST[$this->gateway . '_booking_timeout']
         );
         foreach ($gateway_options as $key => $option) {
-            update_option('em_' . $key, stripslashes($option));
+            $this->update_option($key, $option);
         }
         //default action is to return true
         return true;
     }
 
+    /**
+     * Gets the gateway option from the correct place. Does not require prefixing of em_gatewayname_
+     * Will be particularly useful when restricting possible gateway settings in MultiSite mode and sharing accross networks, use this and you're future-proof.
+     * @param string $name
+     * @param mixed $value
+     * @return mixed
+     */
+    function ipay88_option($name) {
+        return get_option('em_' . $this->gateway . '_' . $name);
+    }
+
+    /**
+     * Updates the gateway option to the correct place. Does not require prefixing of em_gatewayname_
+     * Will be particularly useful when restricting possible gateway settings in MultiSite mode and sharing accross networks, use this and you're future-proof.
+     * @param string $name
+     * @param mixed $value
+     * @return boolean
+     */
+    function update_option($name, $value) {
+        $v = stripslashes($value);
+        return update_option('em_' . $this->gateway . '_' . $name, $v);
+    }
+
     /*
      * Creates SHA1 hash to be use for signature
+     * You may verify your signature with online tool provided by iPay88
+     * http://www.mobile88.com/epayment/testing/TestSignature.asp
      * @param string $source
      */
-    
-   private function compute_signature($source) {
-        return base64_encode(hex2bin(sha1($source)));
+
+    private function compute_signature($source) {
+        return base64_encode($this->hex2bin(sha1($source)));
     }
 
     /*
@@ -438,9 +444,8 @@ class EM_Gateway_iPay88 extends EM_Gateway {
      * 
      * @param string $hexSource
      */
-    
+
     private function hex2bin($hexSource) {
-        $strlen = strlen($hexSource);
         for ($i = 0; $i < strlen($hexSource); $i = $i + 2) {
             $bin .= chr(hexdec(substr($hexSource, $i, 2)));
         }
