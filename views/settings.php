@@ -18,7 +18,7 @@
                             'live' => 'Live',
                             'dev' => 'Development'
                         );
-                        $ipay88_status = $this->get_option('status');
+                        $ipay88_status = $this->ipay88_option('status');
                         foreach ($statuses as $key => $value) {
                             if ($ipay88_status == $key) {
                                 echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
@@ -34,14 +34,14 @@
             <tr valign="top">
                 <th scope="row"><?php _e('Success Message', 'em-pro') ?></th>
                 <td>
-                    <input type="text" name="ipay88_booking_feedback" value="<?php esc_attr_e($this->get_option("booking_feedback")); ?>" style='width: 40em;' /><br />
+                    <input type="text" name="ipay88_booking_feedback" value="<?php esc_attr_e($this->ipay88_option("booking_feedback")); ?>" style='width: 40em;' /><br />
                     <em><?php _e('The message that is shown to a user when a booking is successful whilst being redirected to iPay88 for payment.', 'em-pro'); ?></em>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Success Free Message', 'em-pro') ?></th>
                 <td>
-                    <input type="text" name="ipay88_booking_feedback_free" value="<?php esc_attr_e($this->get_option("booking_feedback_free")); ?>" style='width: 40em;' /><br />
+                    <input type="text" name="ipay88_booking_feedback_free" value="<?php esc_attr_e($this->ipay88_option("booking_feedback_free")); ?>" style='width: 40em;' /><br />
                     <em><?php _e('In some cases you offer a free ticket, this message will be shown and user won\'t be redirected to payment gateway.', 'em-pro'); ?></em>
                 </td>
             </tr>
@@ -53,44 +53,47 @@
         <tbody>
             <tr valign="top">
                 <th scope="row"><?php _e('Merchant Code', 'em-pro') ?></th>
-                <td><input type="text" name="ipay88_mercode" value="<?php esc_attr_e($this->get_option("mercode")); ?>" /><br />
+                <td><input type="text" name="ipay88_mercode" value="<?php esc_attr_e($this->ipay88_option("mercode")); ?>" /><br />
                     <em><?php _e('Merchant code assigned by iPay88.', 'em-pro'); ?></em>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Merchant Key', 'em-pro') ?></th>
-                <td><input type="text" name="ipay88_merkey" value="<?php esc_attr_e($this->get_option("merkey")); ?>" /><br />
+                <td><input type="text" name="ipay88_merkey" value="<?php esc_attr_e($this->ipay88_option("merkey")); ?>" /><br />
                     <em><?php _e('Merchant key assigned by iPay88.', 'em-pro'); ?></em>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Payment ID', 'em-pro') ?></th>
-                <td><input type="text" name="ipay88_payid" value="<?php esc_attr_e($this->get_option("payid")); ?>" /><br />
+                <td><input type="text" name="ipay88_payid" value="<?php esc_attr_e($this->ipay88_option("payid")); ?>" /><br />
                     <em><?php _e('ID of payment method to be use. Recommended value: 2', 'em-pro'); ?></em>
                 </td>
             </tr>
-            <td>	
-                    <select name="ipay88_lang">
-                        <?php
-                        $langs = array(
-                            'UTF-8' => 'UTF-8',
-                            'ISO-8859-1' => 'ISO-8859-1',
-                            'GB2312' => 'GB2312',
-                            'GD18030' => 'GD18030',
-                            'BIG5' => 'BIG5'
-                        );
-                        $ipay88_lang = $this->get_option('lang');
-                        foreach ($langs as $key => $value) {
-                            if ($ipay88_lang == $key) {
-                                echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
-                            } else {
-                                echo '<option value="' . $key . '">' . $value . '</option>';
+            <tr valign="top">
+                <th scope="row"><?php _e('Character Encoding', 'em-pro') ?></th>
+                <td>	
+                        <select name="ipay88_lang">
+                            <?php
+                            $langs = array(
+                                'UTF-8' => 'UTF-8',
+                                'ISO-8859-1' => 'ISO-8859-1',
+                                'GB2312' => 'GB2312',
+                                'GD18030' => 'GD18030',
+                                'BIG5' => 'BIG5'
+                            );
+                            $ipay88_lang = $this->ipay88_option('lang');
+                            foreach ($langs as $key => $value) {
+                                if ($ipay88_lang == $key) {
+                                    echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+                                } else {
+                                    echo '<option value="' . $key . '">' . $value . '</option>';
+                                }
                             }
-                        }
-                        ?>
-                    </select>
-                    <br /><em><?php _e('Encoding type. Recommended value: UTF-8', 'em-pro'); ?></em>
-            </td>
+                            ?>
+                        </select>
+                        <br /><em><?php _e('Encoding type. Recommended value: UTF-8', 'em-pro'); ?></em>
+                </td>
+            </tr>
             <tr valign="top">
 		<th scope="row"><?php _e('Currency', 'em-pro') ?></th>
 		<td><?php echo esc_html(get_option('dbem_bookings_currency','MYR')); ?><br />
@@ -104,20 +107,20 @@
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Thank You URL', 'em-pro') ?></th>
-                <td><input type="text" name="ipay88_thankyouurl" value="<?php esc_attr_e($this->get_option("thankyouurl")); ?>" style='width: 40em;' /><br />
+                <td><input type="text" name="ipay88_thankyouurl" value="<?php esc_attr_e($this->ipay88_option("thankyouurl")); ?>" style='width: 40em;' /><br />
                     <em><?php _e('Client will be redirected to this page if the payment is approved. Create a new page and add the link here.)', 'em-pro'); ?></em>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Payment Cancelled  URL', 'em-pro') ?></th>
-                <td><input type="text" name="ipay88_paycancelled" value="<?php esc_attr_e($this->get_option("paycancelled")); ?>" style='width: 40em;' /><br />
+                <td><input type="text" name="ipay88_paycancelled" value="<?php esc_attr_e($this->ipay88_option("paycancelled")); ?>" style='width: 40em;' /><br />
                     <em><?php _e('Client will be redirected to this page in case they cancel or their payment didn\'t go through. Create a new page and add the link here.', 'em-pro'); ?></em>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Delete Bookings Pending Payment', 'em-pro') ?></th>
                 <td>
-                    <input type="text" name="ipay88_booking_timeout" style="width:50px;" value="<?php esc_attr_e($this->get_option("booking_timeout")); ?>" style='width: 40em;' /> <?php _e('minutes', 'em-pro'); ?><br />
+                    <input type="text" name="ipay88_booking_timeout" style="width:50px;" value="<?php esc_attr_e($this->ipay88_option("booking_timeout")); ?>" style='width: 40em;' /> <?php _e('minutes', 'em-pro'); ?><br />
                     <em><?php _e('Once a booking is started and the user is taken to iPay88 Payment Page, Events Manager stores a booking record in the database to identify the incoming payment. If you would like these bookings to expire after x minutes, please enter a value above.', 'em-pro'); ?></em>
                 </td>
             </tr>
