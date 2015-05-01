@@ -23,6 +23,18 @@ function emp_ipay88_prereq() {
     <?php
 }
 
+function emp_ipay88_metalinks($actions, $file, $plugin_data){
+    $donate_link = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CNGZ6ZQBS2N86&lc=PH&item_name=Support%20for%20%22Events%20Manager%20%2d%20iPay88%20Gateway%22%20project&currency_code=USD";
+    $ipay88_actions = array();
+    $ipay88_actions[] = sprintf( '<a href="'.EM_ADMIN_URL.'&amp;page=events-manager-gateways&amp;action=edit&amp;gateway=ipay88">%s</a>', __('Settings', 'dbem') );
+    $ipay88_actions[] = sprintf( '<a href="%s">%s</a>', $donate_link,__('Donate', 'dbem') );
+    $ipay88_actions = array_merge( $ipay88_actions, $actions );
+
+    return $ipay88_actions;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'emp_ipay88_metalinks', 10, 3 );
+
+
 /**
  * initialise plugin once other plugins are loaded 
  */
