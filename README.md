@@ -6,8 +6,16 @@ Events Manager is a plugin for WordPress which enables you to publish event, loc
 
 
 ###What is Events Manager Pro?
-Events Manager Pro is a premium add-on for Events Manager, which adds a layer of powerful features to what is already available.
-
+Events Manager Pro is a premium add-on for Events Manager, which adds a layer of powerful features to what is already available. This includes:
+- Customizable Booking Forms
+- Individual Attendee Custom Forms
+- Accept Offline, PayPal and Authorize.net Payments
+- Custom Gateway API for Developers
+- Pro Support Forums
+- Coupons & Discount Manager
+- Payment Transaction History
+- Automated & Customizeable Email Reminders
+- Spam Protection with ReCaptcha
 
 ###What is iPay88?
 iPay88 is a leading payment provider in Malaysia. iPay88 offers many payment options to their clients including credit/debit cards, direct debit for countries like Malaysia, Thailand, Philippines, New Zealand, Australia, China, and alternative payment options like AliPay, Paysbuy and more. iPay88 also is able to process payments in multiple currencies depending on your account, some of those include Malaysian Ringgit(MYR), US Dollar (USD), Yuan Renminbi (CNY), Euro (EUR), Pound Sterling (GBP) and more.
