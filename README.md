@@ -1,4 +1,4 @@
-# Events Manager - iPay88 Gateway
+##Events Manager - iPay88 Gateway
 A wordpress plugin that integrates iPay88 Gateway into Events Manager. This plugin requires Events Manager and Events Manager Pro installed.
 
 ###What is Events Manager?
