@@ -59,7 +59,7 @@
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Merchant Key', 'em-pro') ?></th>
-                <td><input type="text" name="ipay88_mercode" value="<?php esc_attr_e($this->get_option("mercode")); ?>" /><br />
+                <td><input type="text" name="ipay88_merkey" value="<?php esc_attr_e($this->get_option("merkey")); ?>" /><br />
                     <em><?php _e('Merchant key assigned by iPay88.', 'em-pro'); ?></em>
                 </td>
             </tr>
@@ -69,6 +69,28 @@
                     <em><?php _e('ID of payment method to be use. Recommended value: 2', 'em-pro'); ?></em>
                 </td>
             </tr>
+            <td>	
+                    <select name="ipay88_lang">
+                        <?php
+                        $langs = array(
+                            'UTF-8' => 'UTF-8',
+                            'ISO-8859-1' => 'ISO-8859-1',
+                            'GB2312' => 'GB2312',
+                            'GD18030' => 'GD18030',
+                            'BIG5' => 'BIG5'
+                        );
+                        $ipay88_lang = $this->get_option('lang');
+                        foreach ($langs as $key => $value) {
+                            if ($ipay88_lang == $key) {
+                                echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+                            } else {
+                                echo '<option value="' . $key . '">' . $value . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+                    <br /><em><?php _e('Encoding type. Recommended value: UTF-8', 'em-pro'); ?></em>
+            </td>
             <tr valign="top">
 		<th scope="row"><?php _e('Currency', 'em-pro') ?></th>
 		<td><?php echo esc_html(get_option('dbem_bookings_currency','MYR')); ?><br />
