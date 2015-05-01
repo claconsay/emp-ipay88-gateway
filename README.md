@@ -26,3 +26,7 @@ An SSL certificate is not required.
 
 ####Disclaimer
 This project is still on development stage so that don't expect too much from it yet.
+
+#####Donate to this project
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CNGZ6ZQBS2N86&lc=PH&item_name=Support%20for%20%22Events%20Manager%20%2d%20iPay88%20Gateway%22%20project&currency_code=USD" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/></a>
+
